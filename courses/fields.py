@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.exceptions import ObjectDoesNotExist
 
 class OrderField(models.PositiveIntegerField):
     
@@ -19,11 +20,10 @@ class OrderField(models.PositiveIntegerField):
                 last_item = qs.latest(self.attname)
                 value = last_item.order + 1
 
-            except ObjectDoeNotExist:
+            except ObjectDoesNotExist:
                 value =  0
                 setattr(model_instance, self.attname, value)
                 return value
         
         else:
             return super(OrderField, self).pre_save(model_instance, add)
-            
